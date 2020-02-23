@@ -6,6 +6,7 @@ WJを作成するためのプログラム。
 　　→ノーツメール宛てにしてみたが、こんどはTABがなくなる。仕方がないので、gmail宛てで当面運用。本質的にはTEXTファイル生成しかダメか？
 2017/5/6：Githubでのコード管理に移行のため、非公開情報をスクリプトプロパティに移動。
 　 このスクリプトに必要なプロパティの管理は別途、Dropbox/Git_Repos/GAS_Properties/1week_schedule.txtで管理する。
+2020/2/23：「F仕事」など、サマリーに入れたいカレンダーが増えたので、それに対応する改造を実施。ついでにfor...of構文を使ってコードをシンプル化。
 */
 
 function myFunction() {
@@ -17,6 +18,10 @@ function sendSchedule() {
   var dt = new Date(); //日付を手動で指定する場合にはData(2017,9-1,1)と、月の数字をマイナス１する。
   dt.setDate (dt.getDate() + 1); //プログラムが起動された日の翌日から1週間分だから、dtを1日進める。
   var strBody = '\n' + '■来週のスケジュール' + '\n'; //メールの本文の最初の行をセット
+  
+  //取得するカレンダーのリストのセッティング
+  //スクリプトのプロパティとして設定してあるカレンダーIDを示すプロパティ名を列挙。
+  var cal_id_prop_list = ['CAL_ID_KINENBI','CAL_ID_ENGEI','CAL_ID_TEKITODO','CAL_ID_MAIN','CAL_ID_FSHIGOTO','CAL_ID_FHAJIKYOUYU'];  
 
   //起点日から1週間分のデータを取得
   for(var i=0;i<7;i++){
@@ -30,39 +35,16 @@ function sendSchedule() {
     if (strCalList.trim() != '予定なし'){
       strBody = strBody + strCalList;
     }
-
-    //記念日カレンダのイベント取得
-    var calID = PropertiesService.getScriptProperties().getProperty('CAL_ID_KINENBI');    
-    var strCalList = getCalList(calID,dt);
-    if (strCalList.trim() != '予定なし'){
-      strBody = strBody + strCalList;
+   
+    //配列 cal_id_list に設定したカレンダーから情報を収集。
+    for (var cal_id_prop of cal_id_prop_list) {
+      var calID = PropertiesService.getScriptProperties().getProperty(cal_id_prop);    
+      var strCalList = getCalList(calID,dt);
+      if (strCalList.trim() != '予定なし'){
+        strBody = strBody + strCalList;
+      }
+      Utilities.sleep(200);//連続してカレンダーを呼び出すと怒られるのでsleep      
     }
-        
-    Utilities.sleep(1000);//連続してカレンダーを呼び出すと怒られるのでsleep      
-
-    //園芸定期ToDoカレンダのイベント取得
-    var calID = PropertiesService.getScriptProperties().getProperty('CAL_ID_ENGEI');    
-    var strCalList = getCalList(calID,dt);
-    if (strCalList.trim() != '予定なし'){
-      strBody = strBody + strCalList;
-    }
-    
-    //[定期ToDo]カレンダのイベント取得
-    var calID = PropertiesService.getScriptProperties().getProperty('CAL_ID_TEKITODO');    
-    var strCalList = getCalList(calID,dt);
-    if (strCalList.trim() != '予定なし'){
-      strBody = strBody + strCalList;
-    }
-
-    Utilities.sleep(1000);//連続してカレンダーを呼び出すと怒られるのでsleep      
-
-    //[Main]カレンダのイベント取得
-    var calID = PropertiesService.getScriptProperties().getProperty('CAL_ID_MAIN');    
-    var strCalList = getCalList(calID,dt);
-    if (strCalList.trim() != '予定なし'){
-      strBody = strBody + strCalList;
-    }
-      
     dt.setDate (dt.getDate() + 1);
   }
 
