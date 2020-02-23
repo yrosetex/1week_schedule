@@ -7,10 +7,21 @@ WJを作成するためのプログラム。
 2017/5/6：Githubでのコード管理に移行のため、非公開情報をスクリプトプロパティに移動。
 　 このスクリプトに必要なプロパティの管理は別途、Dropbox/Git_Repos/GAS_Properties/1week_schedule.txtで管理する。
 2020/2/23：「F仕事」など、サマリーに入れたいカレンダーが増えたので、それに対応する改造を実施。ついでにfor...of構文を使ってコードをシンプル化。
+2020/2/23：iOSのショートカットからも叩けるように、function doGet()も追加。手動で動かすときは、myFunction()を実行すればよいはず。
 */
 
 function myFunction() {
   sendSchedule() 
+}
+
+function doGet() {
+  sendSchedule();
+  
+  var html = '';
+  html += '<h1>ヘッダー</h1>';
+  html += '<p>本文</p>';
+  html += '<p>実行日付: ' + Utilities.formatDate(new Date(),"JST","yyyy/MM/dd"); + '</p>';
+  return HtmlService.createHtmlOutput(html);
 }
 
 function sendSchedule() {
