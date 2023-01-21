@@ -26,16 +26,16 @@ function doGet() {
 
 function sendSchedule() {
   /* 起点の日付のセッティング */
-  var dt = new Date(); //日付を手動で指定する場合にはData(2017,9-1,1)と、月の数字をマイナス１する。
+  var dt = new Date(); //日付を手動で指定する場合にはData(2023,9-1,25)と、月の数字をマイナス１する。
   dt.setDate (dt.getDate() + 1); //プログラムが起動された日の翌日から1週間分だから、dtを1日進める。
   var strBody = '\n' + '■来週のスケジュール' + '\n'; //メールの本文の最初の行をセット
   
   //取得するカレンダーのリストのセッティング
   //スクリプトのプロパティとして設定してあるカレンダーIDを示すプロパティ名を列挙。
-  var cal_id_prop_list = ['CAL_ID_KINENBI','CAL_ID_ENGEI','CAL_ID_TEKITODO','CAL_ID_MAIN','CAL_ID_FSHIGOTO','CAL_ID_FHAJIKYOUYU'];  
+  var cal_id_prop_list = ['CAL_ID_KINENBI','CAL_ID_SHARE_W_FAMILY','CAL_ID_ENGEI','CAL_ID_TEKITODO','CAL_ID_MAIN','CAL_ID_FSHIGOTO','CAL_ID_FHAJIKYOUYU','CAL_ID_CSHIGOTO'];  
 
   //起点日から1週間分のデータを取得
-  for(var i=0;i<7;i++){
+  for(var i=0;i<14;i++){
 
     //日付行の生成
     var dayOfTheWeek = '日月火水木金土'[dt.getDay()];
