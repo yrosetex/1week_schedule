@@ -8,6 +8,8 @@ WJを作成するためのプログラム。
 　 このスクリプトに必要なプロパティの管理は別途、Dropbox/Git_Repos/GAS_Properties/1week_schedule.txtで管理する。
 2020/2/23：「F仕事」など、サマリーに入れたいカレンダーが増えたので、それに対応する改造を実施。ついでにfor...of構文を使ってコードをシンプル化。
 2020/2/23：iOSのショートカットからも叩けるように、function doGet()も追加。手動で動かすときは、myFunction()を実行すればよいはず。
+2023/1/21：T仕事OutlookのイベントをGカレンダー取り込みすることになったことの対応。
+スクリプトプロパティに「T仕事OLイベントのIDを追加」
 */
 
 function myFunction() {
@@ -32,7 +34,7 @@ function sendSchedule() {
   
   //取得するカレンダーのリストのセッティング
   //スクリプトのプロパティとして設定してあるカレンダーIDを示すプロパティ名を列挙。
-  var cal_id_prop_list = ['CAL_ID_KINENBI','CAL_ID_SHARE_W_FAMILY','CAL_ID_ENGEI','CAL_ID_TEKITODO','CAL_ID_MAIN','CAL_ID_FSHIGOTO','CAL_ID_FHAJIKYOUYU','CAL_ID_CSHIGOTO'];  
+  var cal_id_prop_list = ['CAL_ID_KINENBI','CAL_ID_SHARE_W_FAMILY','CAL_ID_ENGEI','CAL_ID_TEKITODO','CAL_ID_MAIN','CAL_ID_FSHIGOTO','CAL_ID_FHAJIKYOUYU','CAL_ID_CSHIGOTO','CAL_ID_T-WORK'];  
 
   //起点日から1週間分のデータを取得
   for(var i=0;i<14;i++){
