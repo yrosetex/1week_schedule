@@ -17,12 +17,13 @@ function myFunction() {
 }
 
 function doGet() {
+  sendSchedule();
+  
   var html = '';
   html += '<h1>ヘッダー</h1>';
-  html += '<p>実行中：1week_schedule.txt(1週間分の予定サマリーをメールする（WJ作成用）</p>';
+  html += '<p>実行完了：1week_schedule.txt(1週間分の予定サマリーをメールする（WJ作成用）</p>';
   html += '<p>実行日付: ' + Utilities.formatDate(new Date(),"JST","yyyy/MM/dd"); + '</p>';
   return HtmlService.createHtmlOutput(html);
-  sendSchedule();
 }
 
 function sendSchedule() {
