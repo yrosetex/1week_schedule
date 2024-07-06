@@ -10,6 +10,7 @@ WJを作成するためのプログラム。
 2020/2/23：iOSのショートカットからも叩けるように、function doGet()も追加。手動で動かすときは、myFunction()を実行すればよいはず。
 2023/1/21：T仕事OutlookのイベントをGカレンダー取り込みすることになったことの対応。
 スクリプトプロパティに「T仕事OLイベントのIDを追加」
+2024/7/4：起動されたら、次の日曜日を調べて、それを起点にスケジュールサマリーを作るように改造。github assistantがうまく動かない！！
 */
 
 function myFunction() {
@@ -28,7 +29,8 @@ function doGet() {
 
 function sendSchedule() {
   /* 起点の日付のセッティング */
-  var dt = new Date(); //日付を手動で指定する場合にはData(2023,9-1,25)と、月の数字をマイナス１する。
+  //var dt = new Date(); //日付を手動で指定する場合にはData(2024,9-1,25)と、月の数字をマイナス１する。
+  var dt = new Date(getNextSundayDate()); //次の日曜日を基準日にセット
   dt.setDate (dt.getDate() + 1); //プログラムが起動された日の翌日から1週間分だから、dtを1日進める。
   var strBody = '\n' + '■来週のスケジュール' + '\n'; //メールの本文の最初の行をセット
   
@@ -77,7 +79,7 @@ function _HHmm(str){
 function getCalList(calID,dt){
   var returnStr = '';
   var targetCal = CalendarApp.getCalendarById(calID); //指定されたIDのカレンダーを取得
-  var evetsInTargetCal = targetCal.getEventsForDay(dt);　//カレンダーの本日のイベントを取得
+  var evetsInTargetCal = targetCal.getEventsForDay(dt); //カレンダーの本日のイベントを取得
 
   if (evetsInTargetCal.length == 0){
     returnStr='予定なし' + '\n';//イベントの数がゼロの場合は、「予定なし」と表示
@@ -94,4 +96,33 @@ function getCalList(calID,dt){
     }
     }
 return returnStr;  
+}
+
+/* 関数定義：スクリプトが起動された日の次の日曜（当日が日曜の場合は当日）を返す関数*/
+/* 
+  Chat GPTに作ってもらった。プロンプトは下記の通り。
+    下記内容の関数を作りたい。
+    本日の曜日を取得し、曜日が日曜日の場合は、本日の日付を返す。
+    本日の曜日が日曜日以外の場合は、次の日曜日の日付を返す。
+*/
+function getNextSundayDate() {
+  // 本日の日付を取得
+  const today = new Date();
+  
+  // 曜日を取得 (0: 日曜日, 1: 月曜日, ..., 6: 土曜日)
+  const dayOfWeek = today.getDay();
+  
+  // 日曜日の場合は本日の日付を返す
+  if (dayOfWeek === 0) {
+    return today;
+  }
+  
+  // 次の日曜日までの日数を計算
+  const daysUntilNextSunday = 7 - dayOfWeek;
+  
+  // 次の日曜日の日付を計算
+  const nextSunday = new Date();
+  nextSunday.setDate(today.getDate() + daysUntilNextSunday);
+  
+  return nextSunday;
 }
